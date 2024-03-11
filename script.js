@@ -9,23 +9,34 @@ $(function () {
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
   //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
   // TODO: Add code to get any user input that was saved in localStorage and set
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
   //
-  // TODO: Add code to display the current date in the header of the page.
+  function updateTime(){
+    var today = dayjs();
+    $("#currentDay").text(today.format("dddd, MMMM DD h:mm:ss a"))
+    }
+    
+    updateTime();
+    setInterval(updateTime, 1000);
+      
+    
+    function timeCheck(){
+      
+      var hoursGet = document.getElementsByTagName("article");
+      var hoursIndex = [];
+      for (i = 0; i < hoursGet.length; i++) {
+         hoursIndex.push(hoursGet[i]);
+    
+        if (dayjs().format("H") > parseInt(hoursIndex[i].id)){
+          hoursIndex[i].classList.add("past");
+        } else if (dayjs().format("H") < parseInt(hoursIndex[i].id)){
+          hoursIndex[i].classList.add("future");
+        } else {hoursIndex[i].classList.add("present")}
+    
+        }
+      }
+    
+    timeCheck();
 });
-
-function updateTime(){
-var today = dayjs();
-$("#currentDay").text(today.format("dddd, MMMM DD h:mm:ss a"))
-}
-
-updateTime();
-setInterval(updateTime, 1000);
