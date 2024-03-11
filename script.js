@@ -1,31 +1,31 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
 $(function () {
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
   var saveButton = $(".saveBtn");
   var saved = [];
-  var input;
-  var hour;
-  saveButton.on("click", function (event){
+  saveButton.on("click", function (event) {
+    var input;
+    var hour;
     var saver = [];
     input = $(event.currentTarget).parent().children("textarea").val();
     hour = $(event.currentTarget).parent().attr("id");
-    saver.push({input, hour});
-  
-   
+    saver.push({ input, hour });
+    saved.push(saver);
+    saving();
+  });
+  function saving() {
+    var arrayS = JSON.stringify(saved);
+    localStorage.setItem("Planner", arrayS);
+  }
+  function loading() {
+    var load = localStorage.getItem("Planner");
+    var reload = JSON.parse(load);
+    console.log(reload);
 
-  })
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
+    for (var i = 0; i < reload.length; i++) {
+      console.log(reload[i][0].hour);
+      $(`#${reload[i][0].hour}`).children().eq(1).text(`${reload[i][0].input}`);
+    }
+  }
+
   function updateTime() {
     var today = dayjs();
     $("#currentDay").text(today.format("dddd, MMMM DD h:mm:ss a"));
@@ -51,4 +51,8 @@ $(function () {
   }
 
   timeCheck();
+
+  if (localStorage.getItem("Planner")) {
+    loading();
+  }
 });
